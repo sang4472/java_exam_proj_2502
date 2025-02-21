@@ -85,6 +85,32 @@ public class Main {
         System.out.printf("내용 : %s\n", foundArticle.body);
 
       }
+
+      else if (cmd.startsWith("article delete ")) {//startsWith: cmd가 article detail이 문장으로 시작하는가의 의미
+        String[] cmdBits = cmd.split(" ");//조각
+        int id = Integer.parseInt(cmdBits[2]);// "1"=>1
+
+
+        int foundIndex = -1;//index 0부터 시작하니까 첫시작을 -1로, -1이면 못찾았다.
+
+        for (int i = 0; i < articles.size(); i++) {//article 1번이 있는지 없는지 확인
+          Article article = articles.get(i);
+
+          if (article.id == id) {//참이면 저 쓰레기 값에 해당 article를 넣어준다
+            foundIndex = i;//삭제 기능
+            break;
+          }
+        }
+
+        if (foundIndex == -1) {//foundIndex가 -1이랑 같으면 다음 출력
+          System.out.printf("%d번 게시물이 존재하지 않습니다.\n", id);
+          continue;
+        }
+
+        articles.remove(foundIndex);
+        System.out.printf("%d번 게시물이 삭제되었습니다.\n", id);
+
+      }
     }
 
     sc.close();//스캐너 닫기
