@@ -15,7 +15,7 @@ public class Main {
     System.out.println("== 프로그램 시작 ==");
     Scanner sc = new Scanner(System.in);
 
-    int lastArticleId = 0;
+    makeTestData();
 
     while ( true ) {
       System.out.print("명령어) ");
@@ -43,15 +43,15 @@ public class Main {
         }
       }
       else if ( cmd.equals("article write") ) {
-        int id = lastArticleId + 1;
-        lastArticleId = id;//GIT, 게시물 작성 시 작성날짜도 저장
+
+        int id = articles.size() + 1;//GIT, 게시물 작성 시 작성날짜도 저장
         String regDate = Util.getNotDateStr();//GIT, 게시물 작성 시 작성날짜도 저장
         System.out.printf("제목 : ");
         String title = sc.nextLine();
         System.out.printf("내용 : ");
         String body = sc.nextLine();
 
-        lastArticleId = id;
+
         Article article = new Article(id, regDate, title, body);//GIT, 게시물 작성 시 작성날짜도 저장
 
         articles.add(article);
@@ -104,11 +104,11 @@ public class Main {
 
       }
 
-      else if ( cmd.startsWith("article delete ") ) {//index값 찾는것
+      else if ( cmd.startsWith("article delete ") ) {
         String[] cmdBits = cmd.split(" ");
         int id = Integer.parseInt(cmdBits[2]);
 
-        int foundIndex = getArticleIndexById(id);// 특정 게시물 찾는 메서드를 구현해서 중복 제거
+        int foundIndex = getArticleIndexById(id);
 
 
 
@@ -128,27 +128,34 @@ public class Main {
     System.out.println("== 프로그램 끝 ==");
   }
 
-  private static Article getArticleById(int id) {// 특정 게시물 찾는 메서드를 구현해서 중복 제거
-    int index = getArticleIndexById(id);//특정 게시물 찾는 메서드를 구현해서 중복 제거
+  private static Article getArticleById(int id) {
+    int index = getArticleIndexById(id);
 
-    if(index != 1) {//특정 게시물 찾는 메서드를 구현해서 중복 제거
-      return articles.get(index);//특정 게시물 찾는 메서드를 구현해서 중복 제거
+    if(index != 1) {
+      return articles.get(index);
     }
 
     return null;
   }
 
-  private static int getArticleIndexById(int id) {//같은 static끼리 소통됨, 특정 게시물 찾는 메서드를 구현해서 중복 제거
-    int i = 0;// 특정 게시물 찾는 메서드를 구현해서 중복 제거
+  private static int getArticleIndexById(int id) {//같은 static끼리 소통됨
+    int i = 0;
 
-    for (Article article : articles) { //향상된 for문,특정 게시물 찾는 메서드를 구현해서 중복 제거
-      if (article.id == id) {//특정 게시물 찾는 메서드를 구현해서 중복 제거
-        return i;//특정 게시물 찾는 메서드를 구현해서 중복 제거
+    for (Article article : articles) { //향상된 for문
+      if (article.id == id) {
+        return i;
       }
 
       i++;//인덱스값을 못찾아서
     }
-    return -1;//특정 게시물 찾는 메서드를 구현해서 중복 제거
+    return -1;
+  }
+  private static void makeTestData() {
+    System.out.println("테스트 데이터를 생성합니다.");
+
+    articles.add(new Article(1, Util.getNotDateStr(), "제목 1", "내용 1",10 ));
+    articles.add(new Article(2, Util.getNotDateStr(), "제목 2", "내용 2", 345 ));
+    articles.add(new Article(3, Util.getNotDateStr(), "제목 3", "내용 3",78 ));
   }
 }
 
@@ -160,12 +167,16 @@ class Article {
   int hit;// 게시물 리스팅 출력 형식 수정, 조회수 기능 추가
 
 
-  public Article( int id, String regDate, String title, String body){
+  public Article( int id, String regDate, String title, String body, int hit){//hit 까지 있을땐 여기로
     this.id = id;
     this.regDate = regDate;//GIT, 게시물 작성 시 작성날짜도 저장
     this.title = title;
     this.body = body;
     this.hit = 0;// 게시물 리스팅 출력 형식 수정, 조회수 기능 추가
+  }
+
+  public Article( int id, String regDate, String title, String body){//body까지 있을땐 여기로
+    this(id, regDate, title, body, 0);
   }
 
   public void increaseHit() {// 게시물 리스팅 출력 형식 수정, 조회수 기능 추가
