@@ -5,11 +5,15 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
+  private static List<Article> articles; //private쓰는 이유 같은 이름이 나올수 있으니까
+
+  static {
+    articles = new ArrayList<>();
+  }
+
   public static void main(String[] args) {
     System.out.println("== 프로그램 시작 ==");
     Scanner sc = new Scanner(System.in);
-
-    List<Article> articles = new ArrayList<>();
 
     int lastArticleId = 0;
 
@@ -59,16 +63,7 @@ public class Main {
         int id = Integer.parseInt(cmdBits[2]); // "1" => 1
 
         // article detail 1
-        Article foundArticle = null;
-
-        for ( int i = 0; i < articles.size(); i++ ) {
-          Article article = articles.get(i);
-
-          if ( article.id == id ) {
-            foundArticle = article;
-            break;
-          }
-        }
+        Article foundArticle = getArticleById(id);
 
         if ( foundArticle == null ) {
           System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
@@ -90,16 +85,7 @@ public class Main {
         int id = Integer.parseInt(cmdBits[2]); // "1" => 1
 
         // article detail 1
-        Article foundArticle = null;
-
-        for ( int i = 0; i < articles.size(); i++ ) {
-          Article article = articles.get(i);
-
-          if ( article.id == id ) {
-            foundArticle = article;
-            break;
-          }
-        }
+        Article foundArticle = getArticleById(id);
 
         if ( foundArticle == null ) {
           System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
@@ -118,20 +104,13 @@ public class Main {
 
       }
 
-      else if ( cmd.startsWith("article delete ") ) {
+      else if ( cmd.startsWith("article delete ") ) {//index값 찾는것
         String[] cmdBits = cmd.split(" ");
         int id = Integer.parseInt(cmdBits[2]);
 
-        int foundIndex = -1;
+        int foundIndex = getArticleIndexById(id);// 특정 게시물 찾는 메서드를 구현해서 중복 제거
 
-        for ( int i = 0; i < articles.size(); i++ ) {
-          Article article = articles.get(i);
 
-          if ( article.id == id ) {
-            foundIndex = i;
-            break;
-          }
-        }
 
         if ( foundIndex == -1 ) {
           System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
@@ -147,6 +126,29 @@ public class Main {
 
     sc.close();
     System.out.println("== 프로그램 끝 ==");
+  }
+
+  private static Article getArticleById(int id) {// 특정 게시물 찾는 메서드를 구현해서 중복 제거
+    int index = getArticleIndexById(id);//특정 게시물 찾는 메서드를 구현해서 중복 제거
+
+    if(index != 1) {//특정 게시물 찾는 메서드를 구현해서 중복 제거
+      return articles.get(index);//특정 게시물 찾는 메서드를 구현해서 중복 제거
+    }
+
+    return null;
+  }
+
+  private static int getArticleIndexById(int id) {//같은 static끼리 소통됨, 특정 게시물 찾는 메서드를 구현해서 중복 제거
+    int i = 0;// 특정 게시물 찾는 메서드를 구현해서 중복 제거
+
+    for (Article article : articles) { //향상된 for문,특정 게시물 찾는 메서드를 구현해서 중복 제거
+      if (article.id == id) {//특정 게시물 찾는 메서드를 구현해서 중복 제거
+        return i;//특정 게시물 찾는 메서드를 구현해서 중복 제거
+      }
+
+      i++;//인덱스값을 못찾아서
+    }
+    return -1;//특정 게시물 찾는 메서드를 구현해서 중복 제거
   }
 }
 
