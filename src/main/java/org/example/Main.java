@@ -31,11 +31,11 @@ public class Main {
           continue;
         }
 
-        System.out.println("번호 | 제목");
+        System.out.println("번호 | 조회 | 제목");// 조회수 기능 추가
         for ( int i = articles.size() - 1; i >= 0; i-- ) {
           Article article = articles.get(i);
 
-          System.out.printf("%d | %s\n", article.id, article.title);
+          System.out.printf("%4d | %4d | %s\n", article.id, article.hit, article.title);// 조회수 기능 추가,%4d -> 4칸 먼저 확보하고 출력
         }
       }
       else if ( cmd.equals("article write") ) {
@@ -75,11 +75,14 @@ public class Main {
           continue;
         }
 
+        foundArticle.increaseHit();//increaseHit증가, 게시물 리스팅 출력 형식 수정, 조회수 기능 추가
+
         System.out.printf("번호 : %d\n", foundArticle.id);
         System.out.printf("날짜 : %s\n", "2025-12-12 12:12:12");
         System.out.printf("날짜 : %s\n", foundArticle.regDate);//GIT, 게시물 작성 시 작성날짜도 저장
         System.out.printf("제목 : %s\n", foundArticle.title);
         System.out.printf("내용 : %s\n", foundArticle.body);
+        System.out.printf("조회 : %d\n", foundArticle.hit);// 게시물 리스팅 출력 형식 수정, 조회수 기능 추가
       }
 
       else if ( cmd.startsWith("article modify ") ) {//게시물 수정 기능 구현
@@ -128,7 +131,7 @@ public class Main {
             foundIndex = i;
             break;
           }
-         }
+        }
 
         if ( foundIndex == -1 ) {
           System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
@@ -152,6 +155,7 @@ class Article {
   String regDate;//GIT, 게시물 작성 시 작성날짜도 저장
   String title;
   String body;
+  int hit;// 게시물 리스팅 출력 형식 수정, 조회수 기능 추가
 
 
   public Article( int id, String regDate, String title, String body){
@@ -159,5 +163,10 @@ class Article {
     this.regDate = regDate;//GIT, 게시물 작성 시 작성날짜도 저장
     this.title = title;
     this.body = body;
+    this.hit = 0;// 게시물 리스팅 출력 형식 수정, 조회수 기능 추가
+  }
+
+  public void increaseHit() {// 게시물 리스팅 출력 형식 수정, 조회수 기능 추가
+    hit++;
   }
 }
