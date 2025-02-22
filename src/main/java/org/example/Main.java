@@ -39,14 +39,15 @@ public class Main {
         }
       } else if (cmd.equals("article write")) {//입력란에 article write 입력시 제목과 내용이 출력하면서 입력가능
         int id = lastArticleId + 1;//lastArticleId를 0으로 초기값을 설정을 해두어서 +1
+        lastArticleId = id;//작성날짜도 저장
+        String regDate = Util.getNotDateStr();//작성날짜도 저장
         System.out.printf("제목 : ");
         String title = sc.nextLine();
         System.out.printf("내용 : ");
         String body = sc.nextLine();
 
-        Article article = new Article(id, title, body);
-
         lastArticleId = id;//1저장,2저장,3저장
+        Article article = new Article(id, regDate, title, body);//게시물 작성 시 작성날짜도 저장
 
         articles.add(article);
 
@@ -86,7 +87,7 @@ public class Main {
 
       }
 
-      else if (cmd.startsWith("article delete ")) {//startsWith: cmd가 article detail이 문장으로 시작하는가의 의미
+      else if (cmd.startsWith("article delete ")) {//startsWith: cmd가 article delete 문장으로 시작하는가의 의미
         String[] cmdBits = cmd.split(" ");//조각
         int id = Integer.parseInt(cmdBits[2]);// "1"=>1
 
@@ -120,11 +121,13 @@ public class Main {
 
 class Article {
   int id;
+  String regDate;//작성날짜도 저장
   String title;
   String body;
 
-  public Article(int id, String title, String body) {
+  public Article(int id, String title, String body, String s) {
     this.id = id;
+    this.regDate = regDate;//작성날짜도 저장
     this.title = title;
     this.body = body;
   }
