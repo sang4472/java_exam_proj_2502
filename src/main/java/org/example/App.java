@@ -1,5 +1,7 @@
 package org.example;
 
+import org.example.controller.ArticleController;
+import org.example.controller.MemberController;
 import org.example.dto.Article;
 import org.example.dto.Member;
 import org.example.util.Util;
@@ -8,11 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class App{
-  private List<Article> articles; //private쓰는 이유 같은 이름이 나올수 있으니까
+public class App {
+  private List<Article> articles;
   private List<Member> members;
 
-  public App() {//외부 클래스로 호출하기 때문에 public
+  public App() {
     articles = new ArrayList<>();
     members = new ArrayList<>();
   }
@@ -23,153 +25,117 @@ public class App{
 
     makeTestData();
 
-    while (true) {
+    MemberController memberController = new MemberController(sc, members);
+    ArticleController articleController = new ArticleController();
+
+    while ( true ) {
       System.out.print("명령어) ");
       String cmd = sc.nextLine();
       cmd = cmd.trim();
 
-      if (cmd.length() == 0) {
+      if ( cmd.length() == 0 ) {
         continue;
       }
 
-      String loginId = null;
-      if (cmd.equals("exit")) {
+      if ( cmd.equals("exit") ) {
         break;
-      } else if (cmd.equals("member join")) {//클래스와 패키지 분리, 회원가입 기능 추가
-        int id = members.size() + 1;
-        String regDate = Util.getNotDateStr();
-
-        loginId = null;
-
-        while (true) {//클래스와 패키지 분리, 회원가입 기능 추가
-          System.out.printf("로그인 아이디 : ");
-          loginId = sc.nextLine();
-
-          if (isJoinableLoginId(loginId) == false) {//만약 참이면 아이디 다시 입력해야 됨, 참이 아니면 새로운 아이디이니까 통과
-            System.out.printf("%s(은)는 이미 사용중인 아이디 입니다.\n", loginId);
-            continue;
-          }
-          break;
-        }
-
-        String loginPw = null;
-        String loginPwConfirm = null;
-
-        while (true) {//클래스와 패키지 분리, 회원가입 기능 추가
-          System.out.printf("로그인 비번 : ");
-          loginPw = sc.nextLine();
-          System.out.printf("로그인 비번확인 : ");
-          loginPwConfirm = sc.nextLine();
-
-          if (loginPw.equals(loginPwConfirm) == false) {
-            System.out.printf("비밀번호를 다시 입력해주세요");
-            continue;
-          }
-          break;
-        }
-
-        System.out.printf("이름 : ");//클래스와 패키지 분리, 회원가입 기능 추가
-        String name = sc.nextLine();
-        Member member = new Member(id, regDate, loginId, loginPw, name);
-
-        members.add(member);
-
-        System.out.printf("%d번 회원이 생성되었습니다.\n", id);
-      } else if (cmd.startsWith("article list")) {
-        if (articles.size() == 0) {
+      }
+      else if ( cmd.equals("member join") ) {
+        memberController.doJoin();
+      }
+      else if ( cmd.startsWith("article list") ) {
+        if (articles.size() == 0 ) {
           System.out.println("게시물이 없습니다.");
           continue;
         }
-        //article list 제목 1 할때 제목 1에서  띄어쓰기 몇번 할줄 모르니까 cmd.substring 선언
-        String searchKeyword = cmd.substring("article list".length()).trim();//게시물 리스트에 검색 기능 추가
-        //article list라고 입력하면 길이를 구하면서 양옆에 공백을 지워준다
-        List<Article> forListArticle = articles;//게시물 리스트에 검색 기능 추가
-        //기존 articles를 forListArticle에 넣어준다
-        if (searchKeyword.length() > 0) {//게시물 리스트에 검색 기능 추가,써치 키워드가 있다,제목, 안녕, 잘가 중에 안녕이라고 검색하면 안녕만 있다
-          forListArticle = new ArrayList<>();//forListArticle에다가 새로운 배열을 만들어준다
 
-          for (Article article : articles) {//articles 만큼 돌려야 한다 그중에
-            if (article.title.contains(searchKeyword)) {//제목 키워드에 포함되어있다면
-              forListArticle.add(article);//해당 article을 list에 담겠다.
+        String searchKeyword = cmd.substring("article list".length()).trim();
+
+        List<Article> forListArticles = articles;
+
+        if ( searchKeyword.length() > 0 ) {
+          forListArticles = new ArrayList<>();
+
+          for ( Article article : articles ) {
+            if ( article.title.contains(searchKeyword) ) {
+              forListArticles.add(article);
             }
           }
         }
-        if (forListArticle.size() == 0) {//게시물을 입력했지만 해당 입력한글이 없을경우
+
+        if ( forListArticles.size() == 0 ) {
           System.out.println("검색 결과가 존재하지 않습니다");
           continue;
         }
 
-        System.out.println("번호 | 조회 | 제목");// 조회수 기능 추가
-        for (int i = forListArticle.size() - 1; i >= 0; i--) {
-          Article article = forListArticle.get(i);
+        System.out.println("번호 | 조회 | 제목");
+        for ( int i = forListArticles.size() - 1; i >= 0; i-- ) {
+          Article article = forListArticles.get(i);
 
-          System.out.printf("%4d | %4d | %s\n", article.id, article.hit, article.title);// 조회수 기능 추가,%4d -> 4칸 먼저 확보하고 출력
+          System.out.printf("%4d | %4d | %s\n", article.id, article.hit, article.title);
         }
-      } else if (cmd.equals("article write")) {
-
-        int id = articles.size() + 1;//GIT, 게시물 작성 시 작성날짜도 저장
-        String regDate = Util.getNotDateStr();//GIT, 게시물 작성 시 작성날짜도 저장
+      }
+      else if ( cmd.equals("article write") ) {
+        int id = articles.size() + 1;
+        String regDate = Util.getNotDateStr();
         System.out.printf("제목 : ");
         String title = sc.nextLine();
         System.out.printf("내용 : ");
         String body = sc.nextLine();
 
-
-        Article article = new Article(id, regDate, title, body);//GIT, 게시물 작성 시 작성날짜도 저장
+        Article article = new Article(id, regDate, title, body);
 
         articles.add(article);
 
         System.out.printf("%d번 글이 작성되었습니다.\n", id);
-      } else if (cmd.startsWith("article detail ")) {
+      }
+      else if ( cmd.startsWith("article detail ") ) {
         String[] cmdBits = cmd.split(" ");
-        int id = Integer.parseInt(cmdBits[2]); // "1" => 1
+        int id = Integer.parseInt(cmdBits[2]);
 
-        // article detail 1
         Article foundArticle = getArticleById(id);
 
-        if (foundArticle == null) {
+        if ( foundArticle == null ) {
           System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
           continue;
         }
 
-        foundArticle.increaseHit();//increaseHit증가, 게시물 리스팅 출력 형식 수정, 조회수 기능 추가
+        foundArticle.increaseHit();
 
         System.out.printf("번호 : %d\n", foundArticle.id);
-        System.out.printf("날짜 : %s\n", "2025-12-12 12:12:12");
-        System.out.printf("날짜 : %s\n", foundArticle.regDate);//GIT, 게시물 작성 시 작성날짜도 저장
+        System.out.printf("날짜 : %s\n", foundArticle.regDate);
         System.out.printf("제목 : %s\n", foundArticle.title);
         System.out.printf("내용 : %s\n", foundArticle.body);
-        System.out.printf("조회 : %d\n", foundArticle.hit);// 게시물 리스팅 출력 형식 수정, 조회수 기능 추가
-      } else if (cmd.startsWith("article modify ")) {//게시물 수정 기능 구현
+        System.out.printf("조회 : %d\n", foundArticle.hit);
+      }
+      else if ( cmd.startsWith("article modify ") ) {
         String[] cmdBits = cmd.split(" ");
-        int id = Integer.parseInt(cmdBits[2]); // "1" => 1
+        int id = Integer.parseInt(cmdBits[2]);
 
-        // article detail 1
         Article foundArticle = getArticleById(id);
 
-        if (foundArticle == null) {
+        if ( foundArticle == null) {
           System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
           continue;
         }
 
-        System.out.printf("제목 : ");//게시물 수정 기능 구현
-        String title = sc.nextLine();//게시물 수정 기능 구현
-        System.out.printf("내용 : ");//게시물 수정 기능 구현
-        String body = sc.nextLine();//게시물 수정 기능 구현
+        System.out.printf("제목 : ");
+        String title = sc.nextLine();
+        System.out.printf("내용 : ");
+        String body = sc.nextLine();
 
-        foundArticle.title = title;//게시물 수정 기능 구현
-        foundArticle.body = body;//게시물 수정 기능 구현
+        foundArticle.title = title;
+        foundArticle.body = body;
 
-        System.out.printf("%d번 게시물이 수정되었습니다.", id);//게시물 수정 기능 구현
-
-      } else if (cmd.startsWith("article delete ")) {
+        System.out.printf("%d번 게시물이 수정되었습니다.\n", id);
+      }
+      else if ( cmd.startsWith("article delete ") ) {
         String[] cmdBits = cmd.split(" ");
         int id = Integer.parseInt(cmdBits[2]);
 
         int foundIndex = getArticleIndexById(id);
 
-
-        if (foundIndex == -1) {
+        if ( foundIndex == -1 ) {
           System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
           continue;
         }
@@ -185,52 +151,31 @@ public class App{
     System.out.println("== 프로그램 끝 ==");
   }
 
-  private static boolean isJoinableLoginId(String loginId) {//클래스와 패키지 분리, 회원가입 기능 추가
-    int index = getMemberIndexByLoginId(loginId);
-
-    if (index == -1) {//-1이면 회원을 못찾았다.
-      return true;
-
-    }
-    return false;//회원을 찾았다.
-
-  }
-
-  private static int getMemberIndexByLoginId(String loginId) {//클래스와 패키지 분리, 회원가입 기능 추가
-    int i = 0;
-    for (Member member : members) {
-      if (member.loginId.equals(loginId)) {
-        return i;
-      }
-      i++;
-    }
-    return -1;
-  }
-
-  private static Article getArticleById(int id) {
+  private Article getArticleById(int id) {
     int index = getArticleIndexById(id);
 
-    if (index != 1) {
+    if ( index != -1 ) {
       return articles.get(index);
     }
 
     return null;
   }
 
-  private static int getArticleIndexById(int id) {//같은 static끼리 소통됨
+  private int getArticleIndexById(int id) {
     int i = 0;
 
-    for (Article article : articles) { //향상된 for문
-      if (article.id == id) {
+    for ( Article article : articles ) {
+      if ( article.id == id ) {
         return i;
       }
 
-      i++;//인덱스값을 못찾아서
+      i++;
     }
+
     return -1;
   }
 
-  private static void makeTestData() {
+  private void makeTestData() {
     System.out.println("테스트 데이터를 생성합니다.");
 
     articles.add(new Article(1, Util.getNotDateStr(), "제목 1", "내용 1", 10));
