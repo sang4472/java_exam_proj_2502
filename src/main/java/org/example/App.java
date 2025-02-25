@@ -3,31 +3,17 @@ package org.example;
 import org.example.controller.ArticleController;
 import org.example.controller.Controller;
 import org.example.controller.MemberController;
-import org.example.dto.Article;
-import org.example.dto.Member;
-import org.example.util.Util;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class App {
-  private List<Article> articles;
-  private List<Member> members;
-
-  public App() {
-    articles = new ArrayList<>();
-    members = new ArrayList<>();
-  }
-
   public void start() {
     System.out.println("== 프로그램 시작 ==");
     Scanner sc = new Scanner(System.in);
 
-    makeTestData();
-
-    MemberController memberController = new MemberController(sc, members);
-    ArticleController articleController = new ArticleController(sc, articles);
+    MemberController memberController = new MemberController(sc);
+    ArticleController articleController = new ArticleController(sc);
+    articleController.makeTestData();
 
     while ( true ) {
       System.out.print("명령어) ");
@@ -64,20 +50,11 @@ public class App {
         System.out.println("존재하지 않는 명령어 입니다.");
         continue;
       }
-      controller.doAction(cmd, actionMethodName);
 
+      controller.doAction(cmd, actionMethodName);
     }
 
     sc.close();
     System.out.println("== 프로그램 끝 ==");
-  }
-
-
-  private void makeTestData() {
-    System.out.println("테스트 데이터를 생성합니다.");
-
-    articles.add(new Article(1, Util.getNotDateStr(), "제목 1", "내용 1", 10));
-    articles.add(new Article(2, Util.getNotDateStr(), "제목 2", "내용 2", 345));
-    articles.add(new Article(3, Util.getNotDateStr(), "제목 3", "내용 3", 78));
   }
 }

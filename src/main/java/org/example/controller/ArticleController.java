@@ -13,9 +13,17 @@ public class ArticleController extends Controller {
   private String cmd;
   private String actionMethodName;
 
-  public ArticleController(Scanner sc, List<Article> articles) {
+  public ArticleController(Scanner sc) {
     this.sc = sc;
-    this.articles = articles;
+    this.articles = new ArrayList<>();
+  }
+
+  public void makeTestData() {
+    System.out.println("테스트 데이터를 생성합니다.");
+
+    articles.add(new Article(1, Util.getNotDateStr(), "제목 1", "내용 1", 10));
+    articles.add(new Article(2, Util.getNotDateStr(), "제목 2", "내용 2", 345));
+    articles.add(new Article(3, Util.getNotDateStr(), "제목 3", "내용 3", 78));
   }
 
   public void doAction(String cmd, String actionMethodName) {
@@ -94,6 +102,12 @@ public class ArticleController extends Controller {
 
   public void showDetail() {
     String[] cmdBits = cmd.split(" ");
+
+    if ( cmdBits.length <= 2 ) {
+      System.out.println("게시물 번호를 입력해주세요.");
+      return;
+    }
+
     int id = Integer.parseInt(cmdBits[2]);
 
     Article foundArticle = getArticleById(id);
@@ -114,6 +128,12 @@ public class ArticleController extends Controller {
 
   public void doModify() {
     String[] cmdBits = cmd.split(" ");
+
+    if ( cmdBits.length <= 2 ) {
+      System.out.println("게시물 번호를 입력해주세요.");
+      return;
+    }
+
     int id = Integer.parseInt(cmdBits[2]);
 
     Article foundArticle = getArticleById(id);
@@ -136,6 +156,12 @@ public class ArticleController extends Controller {
 
   public void doDelete() {
     String[] cmdBits = cmd.split(" ");
+
+    if ( cmdBits.length <= 2 ) {
+      System.out.println("게시물 번호를 입력해주세요.");
+      return;
+    }
+
     int id = Integer.parseInt(cmdBits[2]);
 
     int foundIndex = getArticleIndexById(id);
