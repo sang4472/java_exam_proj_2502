@@ -8,6 +8,5 @@ public class Util {
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     Date now = new Date();
     return dateFormat.format(now);
-
-    }
+  }
 }

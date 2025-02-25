@@ -1,6 +1,7 @@
 package org.example;
 
 import org.example.controller.ArticleController;
+import org.example.controller.Controller;
 import org.example.controller.MemberController;
 import org.example.dto.Article;
 import org.example.dto.Member;
@@ -40,24 +41,30 @@ public class App {
       if ( cmd.equals("exit") ) {
         break;
       }
-      else if ( cmd.equals("member join") ) {
-        memberController.doJoin();
+
+      String[] cmdBits = cmd.split(" "); // article detail 1
+
+      if ( cmdBits.length == 1 ) {
+        System.out.println("존재하지 않는 명령어 입니다.");
+        continue;
       }
-      else if ( cmd.startsWith("article list") ) {
-        articleController.showList(cmd);
+
+      String controllerName = cmdBits[0]; // article/member
+      String actionMethodName = cmdBits[1]; // detail/join
+
+      Controller controller = null;
+
+      if (controllerName.equals("article") ) {
+        controller = articleController;
       }
-      else if ( cmd.equals("article write") ) {
-        articleController.doWrite();
+      else if (controllerName.equals("member") ) {
+        controller = memberController;
       }
-      else if ( cmd.startsWith("article detail ") ) {
-        articleController.showDetail(cmd);
+      else {
+        System.out.println("존재하지 않는 명령어 입니다.");
+        continue;
       }
-      else if ( cmd.startsWith("article modify ") ) {
-        articleController.doModify(cmd);
-      }
-      else if ( cmd.startsWith("article delete ") ) {
-        articleController.doDelete(cmd);
-      }
+      controller.doAction(cmd, actionMethodName);
 
     }
 

@@ -7,17 +7,45 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class ArticleController {
+public class ArticleController extends Controller {
   private Scanner sc;
   private List<Article> articles;
+  private String cmd;
+  private String actionMethodName;
 
   public ArticleController(Scanner sc, List<Article> articles) {
     this.sc = sc;
     this.articles = articles;
   }
 
-  public void showList(String cmd) {
-    if (articles.size() == 0 ) {
+  public void doAction(String cmd, String actionMethodName) {
+    this.cmd = cmd;
+    this.actionMethodName = actionMethodName;
+
+    switch (actionMethodName) {
+      case "write":
+        doWrite();
+        break;
+      case "list":
+        showList();
+        break;
+      case "detail":
+        showDetail();
+        break;
+      case "modify":
+        doModify();
+        break;
+      case "delete":
+        doDelete();
+        break;
+      default:
+        System.out.println("존재하지 않는 명령어입니다.");
+        break;
+    }
+  }
+
+  public void showList() {
+    if (articles.size() == 0) {
       System.out.println("게시물이 없습니다.");
       return;
     }
@@ -26,23 +54,23 @@ public class ArticleController {
 
     List<Article> forListArticles = articles;
 
-    if ( searchKeyword.length() > 0 ) {
+    if (searchKeyword.length() > 0) {
       forListArticles = new ArrayList<>();
 
-      for ( Article article : articles ) {
-        if ( article.title.contains(searchKeyword) ) {
+      for (Article article : articles) {
+        if (article.title.contains(searchKeyword)) {
           forListArticles.add(article);
         }
       }
     }
 
-    if ( forListArticles.size() == 0 ) {
+    if (forListArticles.size() == 0) {
       System.out.println("검색 결과가 존재하지 않습니다");
       return;
     }
 
     System.out.println("번호 | 조회 | 제목");
-    for ( int i = forListArticles.size() - 1; i >= 0; i-- ) {
+    for (int i = forListArticles.size() - 1; i >= 0; i--) {
       Article article = forListArticles.get(i);
 
       System.out.printf("%4d | %4d | %s\n", article.id, article.hit, article.title);
@@ -64,13 +92,13 @@ public class ArticleController {
     System.out.printf("%d번 글이 작성되었습니다.\n", id);
   }
 
-  public void showDetail(String cmd) {
+  public void showDetail() {
     String[] cmdBits = cmd.split(" ");
     int id = Integer.parseInt(cmdBits[2]);
 
     Article foundArticle = getArticleById(id);
 
-    if ( foundArticle == null ) {
+    if (foundArticle == null) {
       System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
       return;
     }
@@ -84,23 +112,13 @@ public class ArticleController {
     System.out.printf("조회 : %d\n", foundArticle.hit);
   }
 
-  private Article getArticleById(int id) {
-    int index = getArticleIndexById(id);
-
-    if ( index != -1 ) {
-      return articles.get(index);
-    }
-
-    return null;
-  }
-
-  public void doModify(String cmd) {
+  public void doModify() {
     String[] cmdBits = cmd.split(" ");
     int id = Integer.parseInt(cmdBits[2]);
 
     Article foundArticle = getArticleById(id);
 
-    if ( foundArticle == null) {
+    if (foundArticle == null) {
       System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
       return;
     }
@@ -116,13 +134,13 @@ public class ArticleController {
     System.out.printf("%d번 게시물이 수정되었습니다.\n", id);
   }
 
-  public void doDelete(String cmd) {
+  public void doDelete() {
     String[] cmdBits = cmd.split(" ");
     int id = Integer.parseInt(cmdBits[2]);
 
     int foundIndex = getArticleIndexById(id);
 
-    if ( foundIndex == -1 ) {
+    if (foundIndex == -1) {
       System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
       return;
     }
@@ -132,11 +150,21 @@ public class ArticleController {
     System.out.printf("%d번 게시물이 삭제되었습니다.\n", id);
   }
 
+  private Article getArticleById(int id) {
+    int index = getArticleIndexById(id);
+
+    if (index != -1) {
+      return articles.get(index);
+    }
+
+    return null;
+  }
+
   private int getArticleIndexById(int id) {
     int i = 0;
 
-    for ( Article article : articles ) {
-      if ( article.id == id ) {
+    for (Article article : articles) {
+      if (article.id == id) {
         return i;
       }
 
