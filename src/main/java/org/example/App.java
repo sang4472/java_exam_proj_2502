@@ -14,23 +14,24 @@ public class App {
     MemberController memberController = new MemberController(sc);
     ArticleController articleController = new ArticleController(sc);
     articleController.makeTestData();
+    memberController.makeTestData();
 
-    while ( true ) {
+    while (true) {
       System.out.print("명령어) ");
       String cmd = sc.nextLine();
       cmd = cmd.trim();
 
-      if ( cmd.length() == 0 ) {
+      if (cmd.length() == 0) {
         continue;
       }
 
-      if ( cmd.equals("exit") ) {
+      if (cmd.equals("exit")) {
         break;
       }
 
       String[] cmdBits = cmd.split(" "); // article detail 1
 
-      if ( cmdBits.length == 1 ) {
+      if (cmdBits.length == 1) {
         System.out.println("존재하지 않는 명령어 입니다.");
         continue;
       }
@@ -40,13 +41,11 @@ public class App {
 
       Controller controller = null;
 
-      if (controllerName.equals("article") ) {
+      if (controllerName.equals("article")) {
         controller = articleController;
-      }
-      else if (controllerName.equals("member") ) {
+      } else if (controllerName.equals("member")) {
         controller = memberController;
-      }
-      else {
+      } else {
         System.out.println("존재하지 않는 명령어 입니다.");
         continue;
       }

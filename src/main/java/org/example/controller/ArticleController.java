@@ -19,7 +19,7 @@ public class ArticleController extends Controller {
   }
 
   public void makeTestData() {
-    System.out.println("테스트 데이터를 생성합니다.");
+    System.out.println("테스트를 위한 게시물 데이터를 생성합니다.");
 
     articles.add(new Article(1, Util.getNotDateStr(), "제목 1", "내용 1", 10));
     articles.add(new Article(2, Util.getNotDateStr(), "제목 2", "내용 2", 345));
@@ -103,7 +103,7 @@ public class ArticleController extends Controller {
   public void showDetail() {
     String[] cmdBits = cmd.split(" ");
 
-    if ( cmdBits.length <= 2 ) {
+    if (cmdBits.length <= 2) {
       System.out.println("게시물 번호를 입력해주세요.");
       return;
     }
@@ -129,7 +129,7 @@ public class ArticleController extends Controller {
   public void doModify() {
     String[] cmdBits = cmd.split(" ");
 
-    if ( cmdBits.length <= 2 ) {
+    if (cmdBits.length <= 2) {
       System.out.println("게시물 번호를 입력해주세요.");
       return;
     }
@@ -157,7 +157,7 @@ public class ArticleController extends Controller {
   public void doDelete() {
     String[] cmdBits = cmd.split(" ");
 
-    if ( cmdBits.length <= 2 ) {
+    if (cmdBits.length <= 2) {
       System.out.println("게시물 번호를 입력해주세요.");
       return;
     }

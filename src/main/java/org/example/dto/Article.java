@@ -5,7 +5,7 @@ public class Article extends Dto {
   public String body;
   public int hit;
 
-  public Article (int id, String regDate, String title, String body, int hit) {
+  public Article(int id, String regDate, String title, String body, int hit) {
     this.id = id;
     this.regDate = regDate;
     this.title = title;
@@ -13,7 +13,7 @@ public class Article extends Dto {
     this.hit = hit;
   }
 
-  public Article (int id, String regDate, String title, String body) {
+  public Article(int id, String regDate, String title, String body) {
     this(id, regDate, title, body, 0);
   }
 

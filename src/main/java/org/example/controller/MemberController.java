@@ -18,6 +18,14 @@ public class MemberController extends Controller {
     this.members = new ArrayList<>();
   }
 
+  public void makeTestData() {
+    System.out.println("테스트를 위한 회원 데이터를 생성합니다.");
+
+    members.add(new Member(1, Util.getNotDateStr(), "admin", "admin", " 관리자"));
+    members.add(new Member(2, Util.getNotDateStr(), "user1", "user1", " 유저1"));
+    members.add(new Member(3, Util.getNotDateStr(), "user2", "user2", " 유저2"));
+  }
+
   public void doAction(String cmd, String actionMethodName) {
     this.cmd = cmd;
     this.actionMethodName = actionMethodName;
