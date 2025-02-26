@@ -1,6 +1,8 @@
 package org.example.controller;
 
+import org.example.container.Container;
 import org.example.dto.Article;
+import org.example.dto.Member;
 import org.example.util.Util;
 
 import java.util.ArrayList;
@@ -15,15 +17,15 @@ public class ArticleController extends Controller {
 
   public ArticleController(Scanner sc) {
     this.sc = sc;
-    this.articles = new ArrayList<>();
+    this.articles = Container.articleRepository.articles;
   }
 
   public void makeTestData() {
     System.out.println("테스트를 위한 게시물 데이터를 생성합니다.");
 
-    articles.add(new Article(1, Util.getNotDateStr(), "제목 1", "내용 1", 10));
-    articles.add(new Article(2, Util.getNotDateStr(), "제목 2", "내용 2", 345));
-    articles.add(new Article(3, Util.getNotDateStr(), "제목 3", "내용 3", 78));
+    articles.add(new Article(1, Util.getNotDateStr(), 1,  "제목 1", "내용 1", 10));
+    articles.add(new Article(2, Util.getNotDateStr(), 2,  "제목 2", "내용 2", 345));
+    articles.add(new Article(3, Util.getNotDateStr(), 2,  "제목 3", "내용 3", 78));
   }
 
   public void doAction(String cmd, String actionMethodName) {
@@ -77,11 +79,22 @@ public class ArticleController extends Controller {
       return;
     }
 
-    System.out.println("번호 | 조회 | 제목");
+    System.out.println("번호 |  작성자  | 조회 | 제목");
     for (int i = forListArticles.size() - 1; i >= 0; i--) {
       Article article = forListArticles.get(i);
 
-      System.out.printf("%4d | %4d | %s\n", article.id, article.hit, article.title);
+      String writerName = null;
+
+      List<Member> members = Container.memberRepository.members;
+
+      for ( Member member : members ) {
+        if ( article.memberId == member.id ) {
+          writerName = member.name;
+          break;
+        }
+      }
+
+      System.out.printf("%4d | %6s | %4d | %s\n", article.id, writerName, article.hit, article.title);
     }
   }
 
@@ -93,7 +106,7 @@ public class ArticleController extends Controller {
     System.out.printf("내용 : ");
     String body = sc.nextLine();
 
-    Article article = new Article(id, regDate, title, body);
+    Article article = new Article(id, regDate, 1, title, body);
 
     articles.add(article);
 

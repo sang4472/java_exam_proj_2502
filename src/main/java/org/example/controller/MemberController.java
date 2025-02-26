@@ -1,9 +1,9 @@
 package org.example.controller;
 
+import org.example.container.Container;
 import org.example.dto.Member;
 import org.example.util.Util;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -15,7 +15,7 @@ public class MemberController extends Controller {
 
   public MemberController(Scanner sc) {
     this.sc = sc;
-    this.members = new ArrayList<>();
+    this.members = Container.memberRepository.members;
   }
 
   public void makeTestData() {
