@@ -23,9 +23,9 @@ public class ArticleController extends Controller {
   public void makeTestData() {
     System.out.println("테스트를 위한 게시물 데이터를 생성합니다.");
 
-    articles.add(new Article(1, Util.getNotDateStr(), 1,  "제목 1", "내용 1", 10));
-    articles.add(new Article(2, Util.getNotDateStr(), 2,  "제목 2", "내용 2", 345));
-    articles.add(new Article(3, Util.getNotDateStr(), 2,  "제목 3", "내용 3", 78));
+    Container.articleRepository.add(new Article(Container.articleRepository.getNewId(), Util.getNotDateStr(), 1,  "제목 1", "내용 1", 10));
+    Container.articleRepository.add(new Article(Container.articleRepository.getNewId(), Util.getNotDateStr(), 2,  "제목 2", "내용 2", 345));
+    Container.articleRepository.add(new Article(Container.articleRepository.getNewId(), Util.getNotDateStr(), 2,  "제목 3", "내용 3", 78));
   }
 
   public void doAction(String cmd, String actionMethodName) {
@@ -99,7 +99,7 @@ public class ArticleController extends Controller {
   }
 
   public void doWrite() {
-    int id = articles.size() + 1;
+    int id = Container.articleRepository.getNewId();
     String regDate = Util.getNotDateStr();
     System.out.printf("제목 : ");
     String title = sc.nextLine();
@@ -108,7 +108,7 @@ public class ArticleController extends Controller {
 
     Article article = new Article(id, regDate, 1, title, body);
 
-    articles.add(article);
+    Container.articleRepository.add(article);
 
     System.out.printf("%d번 글이 작성되었습니다.\n", id);
   }
