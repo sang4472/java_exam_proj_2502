@@ -34,6 +34,10 @@ public class ArticleController extends Controller {
 
     switch (actionMethodName) {
       case "write":
+        if ( !isLogined() ) {
+          System.out.println("로그인 후 이용해주세요.");
+          break;
+        }
         doWrite();
         break;
       case "list":
@@ -106,7 +110,7 @@ public class ArticleController extends Controller {
     System.out.printf("내용 : ");
     String body = sc.nextLine();
 
-    Article article = new Article(id, regDate, 1, title, body);
+    Article article = new Article(id, regDate, loginedMember.id, title, body);
 
     Container.articleRepository.add(article);
 
