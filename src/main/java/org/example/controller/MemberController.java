@@ -12,6 +12,7 @@ public class MemberController extends Controller {
   private List<Member> members;
   private String cmd;
   private String actionMethodName;
+  private Member loginedMember;
 
   public MemberController(Scanner sc) {
     this.sc = sc;
@@ -21,9 +22,9 @@ public class MemberController extends Controller {
   public void makeTestData() {
     System.out.println("테스트를 위한 회원 데이터를 생성합니다.");
 
-    members.add(new Member(1, Util.getNotDateStr(), "admin", "admin", " 관리자"));
-    members.add(new Member(2, Util.getNotDateStr(), "user1", "user1", " 유저1"));
-    members.add(new Member(3, Util.getNotDateStr(), "user2", "user2", " 유저2"));
+    Container.memberRepository.add(new Member(Container.memberRepository.getNewId(), Util.getNotDateStr(), "admin", "admin", " 관리자"));
+    Container.memberRepository.add(new Member(Container.memberRepository.getNewId(), Util.getNotDateStr(), "user1", "user1", " 유저1"));
+    Container.memberRepository.add(new Member(Container.memberRepository.getNewId(), Util.getNotDateStr(), "user2", "user2", " 유저2"));
   }
 
   public void doAction(String cmd, String actionMethodName) {
@@ -34,14 +35,50 @@ public class MemberController extends Controller {
       case "join":
         doJoin();
         break;
+      case "login":
+        doLogin();
+        break;
       default:
         System.out.println("존재하지 않는 명령어입니다.");
         break;
     }
   }
 
+  private void doLogin() {
+    System.out.printf("로그인 아이디 : ");
+    String loginId = sc.nextLine();
+    System.out.printf("로그인 비번 : ");
+    String loginPw = sc.nextLine();
+
+    Member member = getMemberByLoginId(loginId);
+
+    if ( member == null ) {
+      System.out.println("해당 회원은 존재하지 않습니다.");
+      return;
+    }
+
+    if ( member.loginPw.equals(loginPw) == false ) {
+      System.out.println("비밀번호가 맞지 않습니다.");
+      return;
+    }
+
+    loginedMember = member;
+
+    System.out.printf("로그인 성공! %s님 환영합니다!\n", loginedMember.name);
+  }
+
+  private Member getMemberByLoginId(String loginId) {
+    int index = getMemberIndexByLoginId(loginId);
+
+    if ( index == -1 ) {
+      return null;
+    }
+
+    return members.get(index);
+  }
+
   public void doJoin() {
-    int id = members.size() + 1;
+    int id = Container.memberRepository.getNewId();
     String regDate = Util.getNotDateStr();
 
     String loginId = null;
@@ -77,7 +114,7 @@ public class MemberController extends Controller {
     String name = sc.nextLine();
     Member member = new Member(id, regDate, loginId, loginPw, name);
 
-    members.add(member);
+    Container.memberRepository.add(member);
 
     System.out.printf("%d번 회원이 생성되었습니다.\n", id);
   }
@@ -100,7 +137,7 @@ public class MemberController extends Controller {
         return i;
       }
       i++;
-    }
+     }
 
     return -1;
   }
