@@ -17,6 +17,10 @@ public class ArticleService {
     return articleRepository.getArticles(searchKeyword);
   }
 
+  public List<Article> getForPrintArticles() {
+    return articleRepository.getArticles(null);
+  }
+
   public void add(Article article) {
     articleRepository.add(article);
   }

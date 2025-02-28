@@ -2,6 +2,7 @@ package org.example;
 
 import org.example.controller.ArticleController;
 import org.example.controller.Controller;
+import org.example.controller.ExportController;
 import org.example.controller.MemberController;
 
 import java.util.Scanner;
@@ -13,6 +14,7 @@ public class App {
 
     MemberController memberController = new MemberController(sc);
     ArticleController articleController = new ArticleController(sc);
+    ExportController exportController = new ExportController(sc);
     articleController.makeTestData();
     memberController.makeTestData();
 
@@ -45,6 +47,8 @@ public class App {
         controller = articleController;
       } else if (controllerName.equals("member")) {
         controller = memberController;
+      } else if (controllerName.equals("export")) {
+        controller = exportController;
       } else {
         System.out.println("존재하지 않는 명령어 입니다.");
         continue;

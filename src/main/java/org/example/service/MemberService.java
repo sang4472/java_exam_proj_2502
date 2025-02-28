@@ -22,4 +22,8 @@ public class MemberService {
   public void join(Member member) {
     memberRepository.add(member);
   }
+
+  public String getMemberNameById(int memberId) {
+    return memberRepository.getMemberNameById(memberId);
+  }
 }

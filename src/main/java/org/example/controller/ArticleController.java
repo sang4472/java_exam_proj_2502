@@ -2,8 +2,8 @@ package org.example.controller;
 
 import org.example.container.Container;
 import org.example.dto.Article;
-import org.example.dto.Member;
 import org.example.service.ArticleService;
+import org.example.service.MemberService;
 import org.example.util.Util;
 
 import java.util.List;
@@ -14,10 +14,13 @@ public class ArticleController extends Controller {
   private String cmd;
   private String actionMethodName;
   private ArticleService articleService;
+  private MemberService memberService;
+
 
   public ArticleController(Scanner sc) {
     this.sc = sc;
     articleService = Container.articleService;
+    memberService = Container.memberService;
   }
 
   public void makeTestData() {
@@ -68,16 +71,7 @@ public class ArticleController extends Controller {
     for (int i = forListArticles.size() - 1; i >= 0; i--) {
       Article article = forListArticles.get(i);
 
-      String writerName = null;
-
-      List<Member> members = Container.memberRepository.members;
-
-      for ( Member member : members ) {
-        if ( article.memberId == member.id ) {
-          writerName = member.name;
-          break;
-        }
-      }
+      String writerName = memberService.getMemberNameById(article.memberId);
 
       System.out.printf("%4d | %6s | %4d | %s\n", article.id, writerName, article.hit, article.title);
     }
