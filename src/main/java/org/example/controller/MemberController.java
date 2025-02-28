@@ -2,20 +2,20 @@ package org.example.controller;
 
 import org.example.container.Container;
 import org.example.dto.Member;
+import org.example.service.MemberService;
 import org.example.util.Util;
 
-import java.util.List;
 import java.util.Scanner;
 
 public class MemberController extends Controller {
   private Scanner sc;
-  private List<Member> members;
   private String cmd;
   private String actionMethodName;
+  private MemberService memberService;
 
   public MemberController(Scanner sc) {
     this.sc = sc;
-    this.members = Container.memberRepository.members;
+    memberService = Container.memberService;
   }
 
   public void makeTestData() {
@@ -57,7 +57,7 @@ public class MemberController extends Controller {
     System.out.printf("로그인 비번 : ");
     String loginPw = sc.nextLine();
 
-    Member member = getMemberByLoginId(loginId);
+    Member member = memberService.getMemberByLoginId(loginId);
 
     if ( member == null ) {
       System.out.println("해당 회원은 존재하지 않습니다.");
@@ -72,16 +72,6 @@ public class MemberController extends Controller {
     loginedMember = member;
 
     System.out.printf("로그인 성공! %s님 환영합니다!\n", loginedMember.name);
-  }
-
-  private Member getMemberByLoginId(String loginId) {
-    int index = getMemberIndexByLoginId(loginId);
-
-    if ( index == -1 ) {
-      return null;
-    }
-
-    return members.get(index);
   }
 
   public void doJoin() {
@@ -121,31 +111,18 @@ public class MemberController extends Controller {
     String name = sc.nextLine();
     Member member = new Member(id, regDate, loginId, loginPw, name);
 
-    Container.memberRepository.add(member);
+    memberService.join(member);
 
     System.out.printf("%d번 회원이 생성되었습니다.\n", id);
   }
 
   private boolean isJoinableLoginId(String loginId) {
-    int index = getMemberIndexByLoginId(loginId);
+    int index = memberService.getMemberIndexByLoginId(loginId);
 
     if ( index == -1 ) {
       return true;
     }
 
     return false;
-  }
-
-  private int getMemberIndexByLoginId(String loginId) {
-    int i = 0;
-
-    for ( Member member : members ) {
-      if ( member.loginId.equals(loginId) ) {
-        return i;
-      }
-      i++;
-    }
-
-    return -1;
   }
 }
